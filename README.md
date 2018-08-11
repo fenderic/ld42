@@ -3,10 +3,16 @@ by [@fenderic](https://github.com/fenderic) & [@jhowcrof](https://github.com/jho
 
 ----
 ## controls
-* Arrow Keys to move
-* WASD to shoot
+* WASD to move
+* Click to shoot bullets
+* E to bomb
 * Space Bar to use shield
 * R to reset
+
+----
+## todo
+* movement for bullets/bombs
+* rotate ship based on players mouse position
 
 ----
 ## ideas
