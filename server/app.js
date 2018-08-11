@@ -14,6 +14,7 @@ class Player {
     this.x = 0;
     this.y = 0;
     this.client.on('state', state => {
+      console.log(`received updated state from client: ${state.x}, ${state.y}`);
       this.update(state);
     });
   }
@@ -47,7 +48,7 @@ class Game {
 
   update() {
     this.io.emit('state', {
-      players: new Array(...this.players.values())
+      players: Array.from(this.players.values())
           .map(player => player.getState())});
   }
 

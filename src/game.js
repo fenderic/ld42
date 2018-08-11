@@ -90,6 +90,22 @@ class Blasters extends ld42.Actor {
   }
 }
 
+class RemotePlayer extends ld42.Actor {
+  constructor() {
+    super(0, 0);
+    this.width = 40;
+    this.height = 40;
+  }
+
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.rect(this.x,this.y, this.width, this.height);
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = "1";
+    ctx.stroke();
+  }
+}
+
 class Player extends ld42.Actor {
   constructor() {
     super(0, 0);
@@ -106,6 +122,10 @@ class Player extends ld42.Actor {
     this.addChild(this.thrusters);
     this.blasters = new Blasters();
     this.addChild(this.blasters);
+  }
+
+  getState() {
+    return {x: this.x, y: this.y};
   }
 
   update(timeDelta) {
@@ -241,12 +261,53 @@ class Hud extends ld42.Actor {
   }
 }
 
+class ClientUpdater extends ld42.Actor {
+  constructor(player, client) {
+    super();
+    this.player = player;
+    this.client = client;
+    this.remotePlayers = new Map();
+  }
+
+  update(timeDelta) {
+    this.client.sendState(this.player.getState());
+    this.applyAdditions(this.client.getAdditions());
+    this.applyRemovals(this.client.getRemovals());
+    this.applyUpdates(this.client.getUpdates())
+  }
+
+  applyRemovals(removedPlayers) {
+    for (let playerId of removedPlayers) {
+      this.remotePlayers.get(playerId).removeFromParent();
+      this.remotePlayers.delete(playerId);
+    }
+  }
+
+  applyAdditions(addedPlayers) {
+    for (let player of addedPlayers) {
+      const remotePlayer = new RemotePlayer(player.x, player.y);
+      this.addChild(remotePlayer);
+      this.remotePlayers.set(player.id, remotePlayer);
+    }
+  }
+
+  applyUpdates(updatedPlayers) {
+    for (let playerUpdate of updatedPlayers) {
+      console.log(playerUpdate);
+      const player = this.remotePlayers.get(playerUpdate.id);
+      player.x = playerUpdate.x;
+      player.y = playerUpdate.y;
+    }
+  }
+}
+
 class Game {
   constructor(canvas, client) {
     this.ctx = canvas.getContext("2d");
     this.ctx.imageSmoothingEnabled = false;
     this.canvas = canvas;
     this.root = new ld42.Actor(0, 0);
+    this.player = new Player();
     const starfield = new ld42.Actor(0, 0);
     starfield.draw = ctx => {
       // Draw starfield
@@ -255,6 +316,9 @@ class Game {
     };
     this.root.addChild(starfield);
     this.bullets = [];
+
+    const clientUpdater = new ClientUpdater(this.player, client);
+    this.root.addChild(clientUpdater);
 
     const storm = new Storm(canvas.width / 2, canvas.height / 2);
     this.root.addChild(storm);
@@ -271,7 +335,6 @@ class Game {
     };
     this.root.addChild(bulletManager);
 
-    this.player = new Player();
     this.root.addChild(new Hud(this.player));
     this.environ = {
       dVel: 0.25,
@@ -379,8 +442,9 @@ class Game {
     this.root.addChild(this.controls);
     this.root.addChild(this.player);
 
+    this.client = client;
     this.reset();
-    client.connect().then(() => {
+    this.client.connect().then(() => {
       this.start();
     });
   }
@@ -425,7 +489,6 @@ class Game {
   main() {
   	const now = Date.now();
   	const delta = now - this.then;
-
     ld42.Actor.traverse(this.root, actor => actor.update(delta / 1000));
     ld42.Actor.traverse(this.root, actor => actor.draw(this.ctx));
 

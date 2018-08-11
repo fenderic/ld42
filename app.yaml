@@ -2,33 +2,27 @@ runtime: python27
 api_version: 1
 threadsafe: true
 
+default_expiration: "0d 0h"
+
 handlers:
-- url: /
-  script: home.app
+- url: /$
+  static_files: index.html
+  upload: index\.html
 
-- url: /index\.html
-  script: home.app
+- url: /src
+  static_dir: src
+  http_headers:
+    Cache-Control: no-cache
 
-- url: /(.*\.(gif|png|jpg))$
-  static_files: static/\1
-  upload: static/.*\.(gif|png|jpg)$
+- url: /images
+  static_dir: images
 
-- url: /(.*\.js)$
-  static_files: js/\1
-  upload: js/.*\.(gif|png|jpg)$
-
-- url: /js/(.*\.js)$
-  static_files: src/\1
-  upload: src/.*\.js$
-
-- url: /bin/(.*)$
-  static_files: bin/\1
-  upload: bin/.*$
+- url: /bin
+  static_dir: bin
 
 skip_files:
-  - ^(.*/)?#.*#$
-  - ^(.*/)?.*~$
-  - ^(.*/)?.*\.py[co]$
-  - ^(.*/)?.*/RCS/.*$
-  - ^(.*/)?\..*$
-  - ^src/node_modules$
+- ^\.DS_Store
+- ^\.gitignore
+- ^\.git
+- ^server/.*$
+- ^server/node_modules$
