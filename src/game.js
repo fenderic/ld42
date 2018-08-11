@@ -32,96 +32,159 @@ class Storm extends ld42.Actor {
 
   	ctx.stroke();
 
-  	// draw storm mask canvas on top of main canvas context
-  }
+canvas.addEventListener("mousedown", function (e) {
+	shootBullet();
+}, false);
+
+var applyVelocity = function() {
+	player.x += Math.round(player.xVel);
+	player.y += Math.round(player.yVel);
 }
 
-class Thrusters extends ld42.Actor {
-  constructor() {
-    super(0, 0);
-    this.left = false;
-    this.right = false;
-    this.up = false;
-    this.down = false;
-  }
-
-  // Draw Thrusters
-  // Used to show movement
-  // would like to replace with a nice particle effect later
-  draw(ctx) {
-  	ctx.beginPath();
-  	ctx.strokeStyle = "#fc9723";
-  	ctx.lineWidth = "1";
-
-  	// moving up -- thrusters down
-  	if (this.down) {
-  		ctx.rect(this.x, this.y + 60, 5, 5);
-  		ctx.rect(this.x + 55, this.y + 60, 5, 5);
-  	}
-
-  	// moving down -- thrusters up
-  	if (this.up) {
-  		ctx.rect(this.x, this.y - 5, 5, 5);
-  		ctx.rect(this.x + 55, this.y - 5, 5, 5);
-  	}
-
-  	// moving left -- thrusters right
-  	if (this.right) {
-  		ctx.rect(this.x + 60, this.y, 5, 5);
-  		ctx.rect(this.x + 60, this.y + 55, 5, 5);
-  	}
-
-  	// moving right -- thrusters left
-  	if (this.left) {
-  		ctx.rect(this.x - 5, this.y, 5, 5);
-  		ctx.rect(this.x - 5, this.y + 55, 5, 5);
-  	}
-
-  	ctx.stroke();
-  }
+// Shoot bullet from blaster
+// bullets should fly in the direction from the ships blaster
+// but speed should also take into account the ships velocity when it was shot
+// take in mouse position
+var shootBullet = function() {
+	var x;
+	var y;
+	x = player.x + 30;
+	y = player.y;
+	var xVel = player.xVel;
+	var yVel = player.yVel;
+	bullets.push(new Bullet(x,y,xVel,yVel));
 }
 
-class Blasters extends ld42.Actor {
-  constructor() {
-    super(0, 0);
-    this.left = false;
-    this.right = false;
-    this.up = false;
-    this.down = false;
-  }
-
-  draw(ctx) {
-    ctx.beginPath();
-    ctx.strokeStyle = "rgb(35, 136, 252, 1)";
-    ctx.lineWidth = "1";
-
-    // shooting up
-    if (this.up == true)
-    {
-      ctx.rect(this.x + 20, this.y - 5, 20, 5);
-    }
-
-    // shooting down
-    if (this.down == true)
-    {
-      ctx.rect(this.x + 20, this.y + 60, 20, 5);
-    }
-
-    // shooting left
-    if (this.left == true)
-    {
-      ctx.rect(this.x - 5, this.y + 20, 5, 20);
-    }
-
-    // shooting right
-    if (this.right == true)
-    {
-      ctx.rect(this.x + 60, this.y + 20, 5, 20);
-    }
-
-    ctx.stroke();
-  }
+var shootBomb = function() {
+	var x;
+	var y;
+	x = player.x + 30;
+	y = player.y;
+	var xVel = player.xVel;
+	var yVel = player.yVel;
+	bombs.push(new Bomb(x,y,xVel,yVel));
 }
+
+// press R to reset
+var reset = function () {
+	player.x = ((canvas.width) / 2);
+	player.y = ((canvas.height) / 2);
+	player.xVel = 0;
+	player.yVel = 0;
+	player.health = 100;
+	player.shield = 100;
+	player.bombs = 3;
+};
+
+// Update objects
+var update = function (modifier) {
+
+	// W
+	if (87 in keysDown) {
+		thrusters.down = true;
+		player.y -= Math.round(player.speed * modifier);
+
+		if (player.yVel > -maxVel) {
+			player.yVel -= dVel;
+		}
+	}
+	else
+	{
+		thrusters.down = false;
+	}
+
+
+	// S
+	if (83 in keysDown) {
+		thrusters.up = true;
+		player.y += Math.round(player.speed * modifier);
+
+		if (player.yVel < maxVel) {
+			player.yVel += dVel;
+		}
+	}
+	else
+	{
+		thrusters.up = false
+	}
+
+	// A
+	if (65 in keysDown) {
+		thrusters.right = true;
+		player.x -= Math.round(player.speed * modifier);
+
+		if (player.xVel > -maxVel) {
+			player.xVel -= dVel;
+		}
+	}
+	else
+	{
+		thrusters.right = false;
+	}
+
+	// D
+	if (68 in keysDown) {
+		thrusters.left = true;
+		player.x += Math.round(player.speed * modifier);
+
+		if (player.xVel < maxVel) {
+			player.xVel += dVel;
+		}
+	}
+	else
+	{
+		thrusters.left = false;
+	}
+
+	// E
+	if (69 in keysDown) {
+		if (player.bombs > 0)
+		{
+			player.bombs -= Math.round(1);
+			// prevent more than one from shooting
+			shootBomb();
+		}
+	}
+
+	// SPACE BAR
+	if (32 in keysDown) {
+
+		if (player.shield > 0)
+		{
+			player.shieldActivated = true;
+			player.shield -= Math.round(1);
+		}
+		else
+		{
+			player.shieldActivated = false;
+		}
+	}
+	else
+	{
+		player.shieldActivated = false;
+
+		if (player.shield < 100)
+		{
+			player.shield += Math.round(1);
+		}
+	}
+
+	// R
+	if (82 in keysDown) {
+		reset();
+	}
+};
+
+// Draw the ship
+// This is what the player controls
+var drawShip = function () {
+
+	ctx.beginPath();
+	ctx.rect(player.x,player.y,60,60);
+	ctx.strokeStyle = "rgb(35, 136, 252, 1)";
+	ctx.lineWidth = "1";
+	ctx.stroke();
+};
 
 class Player extends ld42.Actor {
   constructor() {
@@ -210,6 +273,41 @@ class Bullet extends ld42.Actor {
   }
 }
 
+class Bomb extends ld42.Actor {
+  constructor() {
+    this.speed = 30;
+    this.x = x;
+    this.y = y;
+    this.xVel = xVel;
+    this.yVel = yVel;
+    this.life = bombLife; // bombs last longer, move slower, and do more damage
+  }
+
+  update(timeDelta) {
+    if (this.life > 0) {
+      this.life -= 5 * timeDelta;
+    }
+  }
+
+  // Draw bullets
+  // make them disappear after existing a lifetime? or get rid of once they
+  // leave the game area?
+  // want to prevent spam, but realisticly they bullets wouldnt disappear?
+  // maybe make them laser beams?
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.strokeStyle = "rgb(252, 42, 35, 1)";
+    ctx.lineWidth = "1";
+
+    var r = 3;
+    var start = 0;
+    var end = 2 * Math.PI;
+    ctx.arc(this.x, this.y, r, start, end);
+
+    ctx.stroke();
+  }
+}
+
 class Hud extends ld42.Actor {
   constructor(player) {
     super(0, 0);
@@ -219,7 +317,7 @@ class Hud extends ld42.Actor {
   draw(ctx) {
     // HUD
     ctx.beginPath();
-    ctx.fillStyle = "#FFFFFF";
+    ctx.fillStyle = "#FFF";
     ctx.font = "24px Consolas";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
@@ -228,8 +326,9 @@ class Hud extends ld42.Actor {
     ctx.fillText("xVel: " + Math.round(this.player.xVel), 2, 62);
     ctx.fillText("yVel: " + Math.round(this.player.yVel), 2, 92);
 
-    ctx.fillText("health: " + Math.round(this.player.health), 2, 562);
-    ctx.fillText("shield: " + Math.round(this.player.shield), 2, 592);
+    ctx.fillText("health: " + Math.round(this.player.health), 2, 570);
+   	ctx.fillText("shield: " + Math.round(this.player.shield), 2, 592);
+   	ctx.fillText("bombs: " + Math.round(this.player.bombs), 2, 610);
     ctx.stroke();
   }
 }
@@ -275,8 +374,8 @@ class Game {
     this.controls = new Actor(0, 0);
     // Update objects
     this.controls.update = timeDelta => {
-    	// UP
-    	if (38 in keysDown) {
+    	// W
+    	if (87 in keysDown) {
     		this.player.thrusters.down = true;
     		this.player.y -= Math.round(this.player.speed * timeDelta);
 
@@ -290,8 +389,8 @@ class Game {
     	}
 
 
-    	// DOWN
-    	if (40 in keysDown) {
+    	// S
+    	if (83 in keysDown) {
     		this.player.thrusters.up = true;
     		this.player.y += Math.round(this.player.speed * timeDelta);
 
@@ -304,8 +403,8 @@ class Game {
     		this.player.thrusters.up = false
     	}
 
-    	// LEFT
-    	if (37 in keysDown) {
+    	// A
+    	if (65 in keysDown) {
     		this.player.thrusters.right = true;
     		this.player.x -= Math.round(this.player.speed * timeDelta);
 
@@ -318,8 +417,8 @@ class Game {
     		this.player.thrusters.right = false;
     	}
 
-    	// RIGHT
-    	if (39 in keysDown) {
+    	// D
+    	if (68 in keysDown) {
     		this.player.thrusters.left = true;
     		this.player.x += Math.round(this.player.speed * timeDelta);
 
@@ -331,6 +430,16 @@ class Game {
     	{
     		this.player.thrusters.left = false;
     	}
+
+      // E
+      if (69 in keysDown) {
+        if (this.player.bombs > 0)
+        {
+          this.player.bombs -= Math.round(1);
+          // prevent more than one from shooting
+          this.shootBomb();
+        }
+      }
 
     	// SPACE BAR
     	if (32 in keysDown) {
@@ -359,7 +468,7 @@ class Game {
     	if (87 in keysDown) {
     		// shoot up
     		this.player.blasters.up = true;
-    		this.shootBullet("up");
+    		this.shootBullet();
     	}
     	else
     	{
@@ -371,7 +480,7 @@ class Game {
     	if (83 in keysDown) {
     		// shoot down
     		this.player.blasters.down = true;
-    		this.shootBullet("down");
+    		this.shootBullet();
     	}
     	else
     	{
@@ -383,7 +492,7 @@ class Game {
     	if (65 in keysDown) {
     		// shoot left
     		this.player.blasters.left = true;
-    		this.shootBullet("left");
+    		this.shootBullet();
     	}
     	else
     	{
@@ -395,7 +504,7 @@ class Game {
     	if (68 in keysDown) {
     		// shoot right
     		this.player.blasters.right = true;
-    		this.shootBullet("right");
+    		this.shootBullet();
     	}
     	else
     	{
@@ -429,34 +538,26 @@ class Game {
   	this.player.shield = 100;
   }
 
-  shootBullet(direction) {
-  	var x;
-  	var y;
-  	if (direction == "up")
-  	{
-  		x = this.player.x + 30;
-  		y = this.player.y;
-  	}
-  	else if (direction == "down")
-  	{
-  		x = this.player.x + 30;
-  		y = this.player.y + 60;
-  	}
-  	else if (direction == "left")
-  	{
-  		x = this.player.x;
-  		y = this.player.y + 30;
-  	}
-  	else if (direction == "right")
-  	{
-  		x = this.player.x + 60;
-  		y = this.player.y + 30;
-  	}
+  shootBullet() {
+    const x = this.player.x + 30;
+   	const y = this.player.y;
   	var xVel = this.player.xVel;
   	var yVel = this.player.yVel;
     const b = new Bullet(x,y,xVel,yVel);
     this.root.addChild(b);
   	this.bullets.push(b);
+  }
+
+  shootBomb() {
+   	var x;
+   	var y;
+   	x = this.player.x + 30;
+   	y = this.player.y;
+   	var xVel = this.player.xVel;
+   	var yVel = this.player.yVel;
+    const b = new Bomb(x,y,xVel,yVel);
+    this.root.addChild(b);
+   	bullets.push(b);
   }
 
   // The main game loop
