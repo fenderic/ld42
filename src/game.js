@@ -1,16 +1,3 @@
-// HOW-TO:
-// - Arrow keys to activate thrusters
-// - "r" to reset
-// - "space bar" to activate/de-activate shield, can protect you from enemy bullets and "small" asteroids, will recharge when de-activated
-
-// Ideas:
-// - 4 directions of shooting with WASD? I think clicking and aiming with your mouse would be too easy since its 2D</li>
-// - mini-map
-// - limited fuel?
-// - different weapon pickups
-// - temporary invisibility cloak?
-// - trap: - mini warp hole - pulls enemy in and holds them for a couple seconds
-
 class Storm extends ld42.Actor {
   draw(ctx) {
   	//ctx.fillStyle = "rgb(252, 35, 136, 0.5)";
@@ -37,6 +24,8 @@ class Storm extends ld42.Actor {
 class Thrusters extends ld42.Actor {
   constructor() {
     super(0, 0);
+    this.width = 5;
+    this.height = 5;
     this.left = false;
     this.right = false;
     this.up = false;
@@ -56,26 +45,26 @@ class Thrusters extends ld42.Actor {
 
   	// moving up -- thrusters down
   	if (this.down) {
-  		ctx.rect(x, y + 60, 5, 5);
-  		ctx.rect(x + 55, y + 60, 5, 5);
+  		ctx.rect(x, y + this.parent.height, this.width, this.height);
+  		ctx.rect(x + this.parent.width - this.width, y + this.parent.height, this.width, this.height);
   	}
 
   	// moving down -- thrusters up
   	if (this.up) {
-  		ctx.rect(x, y - 5, 5, 5);
-  		ctx.rect(x + 55, y - 5, 5, 5);
+  		ctx.rect(x, y - this.height, this.width, this.height);
+  		ctx.rect(x + this.parent.width - this.width, y - this.height, this.width, this.height);
   	}
 
   	// moving left -- thrusters right
   	if (this.right) {
-  		ctx.rect(x + 60, y, 5, 5);
-  		ctx.rect(x + 60, y + 55, 5, 5);
+  		ctx.rect(x + this.parent.width, y, this.width, this.height);
+  		ctx.rect(x + this.parent.width, y + this.parent.height - this.height, this.width, this.height);
   	}
 
   	// moving right -- thrusters left
   	if (this.left) {
-  		ctx.rect(x - 5, y, 5, 5);
-  		ctx.rect(x - 5, y + 55, 5, 5);
+  		ctx.rect(x - this.width, y, this.width, this.height);
+  		ctx.rect(x - this.width, y + this.parent.height - this.height, this.width, this.height);
   	}
 
   	ctx.stroke();
@@ -85,6 +74,8 @@ class Thrusters extends ld42.Actor {
 class Blasters extends ld42.Actor {
   constructor() {
     super(0, 0);
+    this.width = 20;
+    this.height = 5;
   }
 
   draw(ctx) {
@@ -94,7 +85,7 @@ class Blasters extends ld42.Actor {
     const point = this.getPoint();
     const x = point[0];
     const y = point[1];
-    ctx.rect(x + 20, y - 5, 20, 5);
+    ctx.rect(x + this.width, y - this.height, this.width, this.height);
     ctx.stroke();
   }
 }
@@ -102,12 +93,15 @@ class Blasters extends ld42.Actor {
 class Player extends ld42.Actor {
   constructor() {
     super(0, 0);
+    this.width = 60;
+    this.height = 60;
     this.speed = 60;
     this.xVel = 0;
     this.yVel = 0;
     this.health = 100;
     this.shield = 100;
     this.shieldActivated = false;
+    this.bombs = 3;
     this.thrusters = new Thrusters();
     this.addChild(this.thrusters);
     this.blasters = new Blasters();
@@ -121,7 +115,7 @@ class Player extends ld42.Actor {
 
   draw(ctx) {
     ctx.beginPath();
-    ctx.rect(this.x,this.y, 60, 60);
+    ctx.rect(this.x,this.y, this.width, this.height);
     ctx.strokeStyle = "rgb(35, 136, 252, 1)";
     ctx.lineWidth = "1";
     ctx.stroke();
@@ -137,8 +131,8 @@ class Player extends ld42.Actor {
 		ctx.fillStyle = "rgb(35, 245, 252, 0.5)";
 		ctx.lineWidth = "3";
 
-		var x = this.x + 30;
-		var y = this.y + 30;
+		var x = this.x + this.width/2;
+		var y = this.y + this.height/2;
 		var r = 45;
 		var start = 0;
 		var end = 2 * Math.PI;
@@ -187,13 +181,14 @@ class Bullet extends ld42.Actor {
 }
 
 class Bomb extends ld42.Actor {
-  constructor() {
+  constructor(x, y, xVel, yVel) {
+    super(x,y);
     this.speed = 30;
     this.x = x;
     this.y = y;
     this.xVel = xVel;
     this.yVel = yVel;
-    this.life = bombLife; // bombs last longer, move slower, and do more damage
+    this.life = 10000; // bombs are bigger, last longer, move slower, and do more damage. maybe pulse too?
   }
 
   update(timeDelta) {
@@ -255,7 +250,7 @@ class Game {
     const starfield = new ld42.Actor(0, 0);
     starfield.draw = ctx => {
       // Draw starfield
-      ctx.fillStyle = "#0C1116";
+      ctx.fillStyle = "rgb(12, 17, 22, 1)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
     this.root.addChild(starfield);
@@ -300,7 +295,6 @@ class Game {
     	{
     		this.player.thrusters.down = false;
     	}
-
 
     	// S
     	if (83 in keysDown) {
@@ -424,7 +418,7 @@ class Game {
    	var yVel = this.player.yVel;
     const b = new Bomb(x,y,xVel,yVel);
     this.root.addChild(b);
-   	bullets.push(b);
+   	this.bullets.push(b);
   }
 
   // The main game loop
