@@ -1,10 +1,10 @@
 {
   "name": "ld42",
   "scripts": {
-    "start": "node ${SCRIPT:-app.js}",
+    "start": "node ${SCRIPT:-app.js}"
   },
   "dependencies": {
-    "socket.io": "latest",
+    "socket.io": ""
   },
   "engines": {
     "node": ">=4.3.2"

@@ -1,11 +1,15 @@
 'use strict';
 
-var server = require('http').createServer();
-var io = require('socket.io')(server);
-io.on('connection', function(client){
-  client.on('event', function(data){});
-  client.on('disconnect', function(){});
+const server = require('http').createServer();
+const io = require('socket.io')(server);
+io.on('connection', client => {
+  console.log('connected');
+  client.on('event',
+    data => console.log('onEvent: ' + data));
+  client.on('disconnect',
+    () => console.log('disconnect'));
 });
-server.listen(config.get('PORT'));
+console.log('starting');
+server.listen(8080);
 
 module.exports = server;
