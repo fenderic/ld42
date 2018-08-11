@@ -24,3 +24,11 @@ handlers:
 - url: /bin/(.*)$
   static_files: bin/\1
   upload: bin/.*$
+
+skip_files:
+  - ^(.*/)?#.*#$
+  - ^(.*/)?.*~$
+  - ^(.*/)?.*\.py[co]$
+  - ^(.*/)?.*/RCS/.*$
+  - ^(.*/)?\..*$
+  - ^src/node_modules$

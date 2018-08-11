@@ -247,7 +247,7 @@ class Hud extends ld42.Actor {
 }
 
 class Game {
-  constructor(canvas) {
+  constructor(canvas, client) {
     this.ctx = canvas.getContext("2d");
     this.ctx.imageSmoothingEnabled = false;
     this.canvas = canvas;
@@ -386,7 +386,9 @@ class Game {
     this.root.addChild(this.player);
 
     this.reset();
-    this.start();
+    client.connect().then(() => {
+      this.start();
+    });
   }
 
   start() {
@@ -466,6 +468,7 @@ const init = () => {
   var w = window;
   requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
-  const game = new Game(canvas);
+  const client = new ld42.Client();
+  const game = new Game(canvas, client);
 };
 init();
