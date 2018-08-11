@@ -1,0 +1,26 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /
+  script: home.app
+
+- url: /index\.html
+  script: home.app
+
+- url: /(.*\.(gif|png|jpg))$
+  static_files: static/\1
+  upload: static/.*\.(gif|png|jpg)$
+
+- url: /(.*\.js)$
+  static_files: js/\1
+  upload: js/.*\.(gif|png|jpg)$
+
+- url: /js/(.*\.js)$
+  static_files: src/\1
+  upload: src/.*\.js$
+
+- url: /bin/(.*)$
+  static_files: bin/\1
+  upload: bin/.*$
