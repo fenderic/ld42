@@ -50,29 +50,32 @@ class Thrusters extends ld42.Actor {
   	ctx.beginPath();
   	ctx.strokeStyle = "#fc9723";
   	ctx.lineWidth = "1";
+    const point = this.getPoint();
+    const x = point[0];
+    const y = point[1];
 
   	// moving up -- thrusters down
   	if (this.down) {
-  		ctx.rect(this.x, this.y + 60, 5, 5);
-  		ctx.rect(this.x + 55, this.y + 60, 5, 5);
+  		ctx.rect(x, y + 60, 5, 5);
+  		ctx.rect(x + 55, y + 60, 5, 5);
   	}
 
   	// moving down -- thrusters up
   	if (this.up) {
-  		ctx.rect(this.x, this.y - 5, 5, 5);
-  		ctx.rect(this.x + 55, this.y - 5, 5, 5);
+  		ctx.rect(x, y - 5, 5, 5);
+  		ctx.rect(x + 55, y - 5, 5, 5);
   	}
 
   	// moving left -- thrusters right
   	if (this.right) {
-  		ctx.rect(this.x + 60, this.y, 5, 5);
-  		ctx.rect(this.x + 60, this.y + 55, 5, 5);
+  		ctx.rect(x + 60, y, 5, 5);
+  		ctx.rect(x + 60, y + 55, 5, 5);
   	}
 
   	// moving right -- thrusters left
   	if (this.left) {
-  		ctx.rect(this.x - 5, this.y, 5, 5);
-  		ctx.rect(this.x - 5, this.y + 55, 5, 5);
+  		ctx.rect(x - 5, y, 5, 5);
+  		ctx.rect(x - 5, y + 55, 5, 5);
   	}
 
   	ctx.stroke();
@@ -88,7 +91,10 @@ class Blasters extends ld42.Actor {
     ctx.beginPath();
     ctx.strokeStyle = "rgb(35, 136, 252, 1)";
     ctx.lineWidth = "1";
-    ctx.rect(this.x + 20, this.y - 5, 20, 5);
+    const point = this.getPoint();
+    const x = point[0];
+    const y = point[1];
+    ctx.rect(x + 20, y - 5, 20, 5);
     ctx.stroke();
   }
 }
