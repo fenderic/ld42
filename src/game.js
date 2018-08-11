@@ -82,41 +82,13 @@ class Thrusters extends ld42.Actor {
 class Blasters extends ld42.Actor {
   constructor() {
     super(0, 0);
-    this.left = false;
-    this.right = false;
-    this.up = false;
-    this.down = false;
   }
 
   draw(ctx) {
     ctx.beginPath();
     ctx.strokeStyle = "rgb(35, 136, 252, 1)";
     ctx.lineWidth = "1";
-
-    // shooting up
-    if (this.up == true)
-    {
-      ctx.rect(this.x + 20, this.y - 5, 20, 5);
-    }
-
-    // shooting down
-    if (this.down == true)
-    {
-      ctx.rect(this.x + 20, this.y + 60, 20, 5);
-    }
-
-    // shooting left
-    if (this.left == true)
-    {
-      ctx.rect(this.x - 5, this.y + 20, 5, 20);
-    }
-
-    // shooting right
-    if (this.right == true)
-    {
-      ctx.rect(this.x + 60, this.y + 20, 5, 20);
-    }
-
+    ctx.rect(this.x + 20, this.y - 5, 20, 5);
     ctx.stroke();
   }
 }
@@ -399,54 +371,6 @@ class Game {
     		}
     	}
 
-    	// W
-    	if (87 in keysDown) {
-    		// shoot up
-    		this.player.blasters.up = true;
-    		this.shootBullet();
-    	}
-    	else
-    	{
-    		// stop
-    		this.player.blasters.up = false;
-    	}
-
-    	// S
-    	if (83 in keysDown) {
-    		// shoot down
-    		this.player.blasters.down = true;
-    		this.shootBullet();
-    	}
-    	else
-    	{
-    		// stop
-    		this.player.blasters.down = false;
-    	}
-
-    	// A
-    	if (65 in keysDown) {
-    		// shoot left
-    		this.player.blasters.left = true;
-    		this.shootBullet();
-    	}
-    	else
-    	{
-    		// stop
-    		this.player.blasters.left = false;
-    	}
-
-    	// D
-    	if (68 in keysDown) {
-    		// shoot right
-    		this.player.blasters.right = true;
-    		this.shootBullet();
-    	}
-    	else
-    	{
-    		// stop
-    		this.player.blasters.right = false;
-    	}
-
     	// R
     	if (82 in keysDown) {
     		this.reset();
@@ -527,6 +451,10 @@ const init = () => {
   canvas.width = 960;
   canvas.height = 640;
   document.body.appendChild(canvas);
+
+  canvas.addEventListener("mousedown", function (e) {
+    game.shootBullet();
+  }, false);
 
   // Cross-browser support for requestAnimationFrame
   var w = window;
