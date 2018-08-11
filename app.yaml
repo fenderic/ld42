@@ -8,17 +8,21 @@ handlers:
 - url: /$
   static_files: index.html
   upload: index\.html
+  secure: never
 
 - url: /src
   static_dir: src
   http_headers:
     Cache-Control: no-cache
+  secure: never
 
 - url: /images
   static_dir: images
+  secure: never
 
 - url: /bin
   static_dir: bin
+  secure: never
 
 skip_files:
 - ^\.DS_Store

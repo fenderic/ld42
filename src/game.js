@@ -295,8 +295,10 @@ class ClientUpdater extends ld42.Actor {
     for (let playerUpdate of updatedPlayers) {
       console.log(playerUpdate);
       const player = this.remotePlayers.get(playerUpdate.id);
-      player.x = playerUpdate.x;
-      player.y = playerUpdate.y;
+      if (player) {
+        player.x = playerUpdate.x;
+        player.y = playerUpdate.y;
+      }
     }
   }
 }
