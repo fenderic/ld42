@@ -1,3 +1,6 @@
+const ACCELERATION = 30;
+const VELOCITY = 70;
+
 class Storm extends ld42.Actor {
   draw(ctx) {
   	//ctx.fillStyle = "rgb(252, 35, 136, 0.5)";
@@ -10,12 +13,10 @@ class Storm extends ld42.Actor {
   	ctx.strokeStyle = "rgb(252, 35, 136, 1)";
   	ctx.lineWidth = "3";
 
-  	var x = this.x;
-  	var y = this.y;
   	var r = 300;
   	var start = 0;
   	var end = 2 * Math.PI;
-  	ctx.arc(x,y,r,start,end);
+  	ctx.arc(0,0,r,start,end);
     ctx.closePath();
 
   	ctx.stroke();
@@ -37,11 +38,6 @@ class Thrusters extends ld42.Actor {
   // Used to show movement
   // would like to replace with a nice particle effect later
   draw(ctx) {
-
-    const point = this.getPoint();
-    const x = point[0];
-    const y = point[1];
-
 
     ctx.beginPath();
     ctx.lineWidth = "1";
@@ -85,38 +81,37 @@ class Thrusters extends ld42.Actor {
     ctx.restore();
 */
     // THRUSTER FRAME WITH RESPECT TO PLAYER
-    ctx.moveTo(this.parent.x + 20,this.parent.y + 0);
-    ctx.lineTo(this.parent.x + 40,this.parent.y + 0);
-    ctx.lineTo(this.parent.x + 40,this.parent.y + 10);
-    ctx.lineTo(this.parent.x + 35,this.parent.y + 10);
-    ctx.lineTo(this.parent.x + 35,this.parent.y + 25);
-    ctx.lineTo(this.parent.x + 50,this.parent.y + 25);
-    ctx.lineTo(this.parent.x + 50,this.parent.y + 20);
-    ctx.lineTo(this.parent.x + 60,this.parent.y + 20);
-    ctx.lineTo(this.parent.x + 60,this.parent.y + 40);
-    ctx.lineTo(this.parent.x + 50,this.parent.y + 40);
-    ctx.lineTo(this.parent.x + 50,this.parent.y + 35);
-    ctx.lineTo(this.parent.x + 35,this.parent.y + 35);
-    ctx.lineTo(this.parent.x + 35,this.parent.y + 50);
-    ctx.lineTo(this.parent.x + 40,this.parent.y + 50);
-    ctx.lineTo(this.parent.x + 40,this.parent.y + 60);
-    ctx.lineTo(this.parent.x + 20,this.parent.y + 60);
-    ctx.lineTo(this.parent.x + 20,this.parent.y + 50);
-    ctx.lineTo(this.parent.x + 25,this.parent.y + 50);
-    ctx.lineTo(this.parent.x + 25,this.parent.y + 35);
-    ctx.lineTo(this.parent.x + 10,this.parent.y + 35);
-    ctx.lineTo(this.parent.x + 10,this.parent.y + 40);
-    ctx.lineTo(this.parent.x + 0,this.parent.y + 40);
-    ctx.lineTo(this.parent.x + 0,this.parent.y + 20);
-    ctx.lineTo(this.parent.x + 10,this.parent.y + 20);
-    ctx.lineTo(this.parent.x + 10,this.parent.y + 25);
-    ctx.lineTo(this.parent.x + 25,this.parent.y + 25);
-    ctx.lineTo(this.parent.x + 25,this.parent.y + 10);
-    ctx.lineTo(this.parent.x + 20,this.parent.y + 10);
+    ctx.moveTo(20,0);
+    ctx.lineTo(40,0);
+    ctx.lineTo(40,10);
+    ctx.lineTo(35,10);
+    ctx.lineTo(35,25);
+    ctx.lineTo(50,25);
+    ctx.lineTo(50,20);
+    ctx.lineTo(60,20);
+    ctx.lineTo(60,40);
+    ctx.lineTo(50,40);
+    ctx.lineTo(50,35);
+    ctx.lineTo(35,35);
+    ctx.lineTo(35,50);
+    ctx.lineTo(40,50);
+    ctx.lineTo(40,60);
+    ctx.lineTo(20,60);
+    ctx.lineTo(20,50);
+    ctx.lineTo(25,50);
+    ctx.lineTo(25,35);
+    ctx.lineTo(10,35);
+    ctx.lineTo(10,40);
+    ctx.lineTo(0,40);
+    ctx.lineTo(0,20);
+    ctx.lineTo(10,20);
+    ctx.lineTo(10,25);
+    ctx.lineTo(25,25);
+    ctx.lineTo(25,10);
+    ctx.lineTo(20,10);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
-    ctx.restore();
 
     // If thruster active, draw fire
   	// moving up -- thrusters down
@@ -136,13 +131,13 @@ class Thrusters extends ld42.Actor {
       ctx.beginPath();
       ctx.strokeStyle = "#fc9723";
       ctx.fillStyle = "#fcab4e";
-      ctx.moveTo(this.parent.x + 20, this.parent.y + 60);
-      ctx.lineTo(this.parent.x + 20, this.parent.y + 75);
-      ctx.lineTo(this.parent.x + 25, this.parent.y + 70);
-      ctx.lineTo(this.parent.x + 30, this.parent.y + 80);
-      ctx.lineTo(this.parent.x + 35, this.parent.y + 70);
-      ctx.lineTo(this.parent.x + 40, this.parent.y + 75);
-      ctx.lineTo(this.parent.x + 40, this.parent.y + 60);
+      ctx.moveTo(20, 60);
+      ctx.lineTo(20, 75);
+      ctx.lineTo(25, 70);
+      ctx.lineTo(30, 80);
+      ctx.lineTo(35, 70);
+      ctx.lineTo(40, 75);
+      ctx.lineTo(40, 60);
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
@@ -152,13 +147,13 @@ class Thrusters extends ld42.Actor {
       ctx.beginPath();
       ctx.strokeStyle = "#fc9723";
       ctx.fillStyle = "#fcab4e";
-      ctx.moveTo(this.parent.x + 20, this.parent.y);
-      ctx.lineTo(this.parent.x + 20, this.parent.y - 15);
-      ctx.lineTo(this.parent.x + 25, this.parent.y - 10);
-      ctx.lineTo(this.parent.x + 30, this.parent.y - 20);
-      ctx.lineTo(this.parent.x + 35, this.parent.y - 10);
-      ctx.lineTo(this.parent.x + 40, this.parent.y - 15);
-      ctx.lineTo(this.parent.x + 40, this.parent.y);
+      ctx.moveTo(20, 0);
+      ctx.lineTo(20, -15);
+      ctx.lineTo(25, -10);
+      ctx.lineTo(30, -20);
+      ctx.lineTo(35, -10);
+      ctx.lineTo(40, -15);
+      ctx.lineTo(40, 0);
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
@@ -169,13 +164,13 @@ class Thrusters extends ld42.Actor {
       ctx.beginPath();
       ctx.strokeStyle = "#fc9723";
       ctx.fillStyle = "#fcab4e";
-      ctx.moveTo(this.parent.x + 60, this.parent.y + 20);
-      ctx.lineTo(this.parent.x + 75, this.parent.y + 20);
-      ctx.lineTo(this.parent.x + 70, this.parent.y + 25);
-      ctx.lineTo(this.parent.x + 80, this.parent.y + 30);
-      ctx.lineTo(this.parent.x + 70, this.parent.y + 35);
-      ctx.lineTo(this.parent.x + 75, this.parent.y + 40);
-      ctx.lineTo(this.parent.x + 60, this.parent.y + 40);
+      ctx.moveTo(60, 20);
+      ctx.lineTo(75, 20);
+      ctx.lineTo(70, 25);
+      ctx.lineTo(80, 30);
+      ctx.lineTo(70, 35);
+      ctx.lineTo(75, 40);
+      ctx.lineTo(60, 40);
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
@@ -186,13 +181,13 @@ class Thrusters extends ld42.Actor {
       ctx.beginPath();
       ctx.strokeStyle = "#fc9723";
       ctx.fillStyle = "#fcab4e";
-      ctx.moveTo(this.parent.x, this.parent.y + 20);
-      ctx.lineTo(this.parent.x - 15, this.parent.y + 20);
-      ctx.lineTo(this.parent.x - 10, this.parent.y + 25);
-      ctx.lineTo(this.parent.x - 20, this.parent.y + 30);
-      ctx.lineTo(this.parent.x - 10, this.parent.y + 35);
-      ctx.lineTo(this.parent.x - 15, this.parent.y + 40);
-      ctx.lineTo(this.parent.x, this.parent.y + 40);
+      ctx.moveTo(0, 20);
+      ctx.lineTo(-15, 20);
+      ctx.lineTo(-10, 25);
+      ctx.lineTo(-20, 30);
+      ctx.lineTo(-10, 35);
+      ctx.lineTo(-15, 40);
+      ctx.lineTo(0, 40);
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
@@ -230,7 +225,7 @@ class RemotePlayer extends ld42.Actor {
 
   draw(ctx) {
     ctx.beginPath();
-    ctx.rect(this.x,this.y, this.width, this.height);
+    ctx.rect(0, 0, this.width, this.height);
     ctx.strokeStyle = "red";
     ctx.lineWidth = "1";
     ctx.stroke();
@@ -242,9 +237,8 @@ class Player extends ld42.Actor {
     super(0, 0);
     this.width = 60;
     this.height = 60;
-    this.speed = 60;
-    this.xVel = 0;
-    this.yVel = 0;
+    this.velocity = new ld42.Point(0, 0);
+    this.acc = new ld42.Point(0, 0);
     this.health = 100;
     this.shield = 100;
     this.shieldActivated = false;
@@ -258,22 +252,42 @@ class Player extends ld42.Actor {
   }
 
   getState() {
-    return {x: this.x, y: this.y};
+    return {x: this.getPoint().x, y: this.getPoint().y};
   }
 
   update(timeDelta) {
-    this.x += Math.round(this.xVel * timeDelta * 20);
-    this.y += Math.round(this.yVel * timeDelta * 20);
+    this.velocity.x = this.velocity.x + this.acc.x * timeDelta;
+    this.velocity.y = this.velocity.y + this.acc.y * timeDelta;
+    if ((this.acc.x > 0 && this.velocity.x >= 0) ||
+        (this.acc.x < 0 && this.velocity.x <= 0)) {
+      this.acc.x = 0;
+      this.velocity.x = 0;
+    }
+    if ((this.acc.y > 0 && this.velocity.y >= 0) ||
+        (this.acc.y < 0 && this.velocity.y <= 0)) {
+      this.acc.y = 0;
+      this.velocity.y = 0;
+    }
+    const averageVelocity = this.getAverageVelocity(timeDelta);
+    this.setPoint(
+        this.getPoint().x + averageVelocity.x * timeDelta,
+        this.getPoint().y + averageVelocity.y * timeDelta);
+  }
+
+  getAverageVelocity(timeDelta) {
+    return new ld42.Point(
+        this.velocity.x + this.acc.x * 0.5 * timeDelta,
+        this.velocity.y + this.acc.y * 0.5 * timeDelta);
   }
 
   draw(ctx) {
     ctx.save();
     ctx.beginPath();
 
-    ctx.translate(this.x+this.width/2, this.y+this.height/2);
+    ctx.translate(this.width/2, this.height/2);
 
-    var targetX = this.mouseX - this.x;
-    var targetY = this.mouseY - this.y;
+    var targetX = this.mouseX - this.getProjectedPoint().x;
+    var targetY = this.mouseY - this.getProjectedPoint().y;
 
     var deg = Math.atan2(targetX,  targetY);
     //console.log(deg);
@@ -284,7 +298,7 @@ class Player extends ld42.Actor {
 
     ctx.strokeStyle = "#2388fc";
     ctx.fillStyle = "#4e9ffc";
-      
+
     ctx.moveTo(-5, -15)
     ctx.lineTo(5, -15);
     ctx.lineTo(15, -5);
@@ -297,8 +311,8 @@ class Player extends ld42.Actor {
     ctx.lineTo(-15, -5);
 
     ctx.closePath();
-    
-    ctx.translate(-this.x-this.width/2, -this.y-this.height/2);
+
+    ctx.translate(-this.width/2, -this.height/2);
 
     ctx.fill();
     ctx.stroke();
@@ -316,8 +330,8 @@ class Player extends ld42.Actor {
 		ctx.fillStyle = "rgb(35, 245, 252, 0.5)";
 		ctx.lineWidth = "3";
 
-		var x = this.x + this.width/2;
-		var y = this.y + this.height/2;
+		var x = this.width/2;
+		var y = this.height/2;
 		var r = 45;
 		var start = 0;
 		var end = 2 * Math.PI;
@@ -359,7 +373,7 @@ class Bullet extends ld42.Actor {
     var r = 1;
     var start = 0;
     var end = 2 * Math.PI;
-    ctx.arc(this.x, this.y, r, start, end);
+    ctx.arc(0, 0, r, start, end);
 
     ctx.stroke();
   }
@@ -369,8 +383,6 @@ class Bomb extends ld42.Actor {
   constructor(x, y, xVel, yVel) {
     super(x,y);
     this.speed = 30;
-    this.x = x;
-    this.y = y;
     this.xVel = xVel;
     this.yVel = yVel;
     this.life = 200; // bombs are bigger, last longer, move slower, and do more damage. maybe pulse too?
@@ -395,7 +407,7 @@ class Bomb extends ld42.Actor {
     var r = 3;
     var start = 0;
     var end = 2 * Math.PI;
-    ctx.arc(this.x, this.y, r, start, end);
+    ctx.arc(0, 0, r, start, end);
 
     ctx.stroke();
   }
@@ -414,10 +426,10 @@ class Hud extends ld42.Actor {
     ctx.font = "24px Consolas";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText("x: " + this.player.x, 2, 10);
-    ctx.fillText("y: " + this.player.y, 2, 30);
-    ctx.fillText("xVel: " + Math.round(this.player.xVel), 2, 60);
-    ctx.fillText("yVel: " + Math.round(this.player.yVel), 2, 90);
+    ctx.fillText("x: " + this.player.getPoint().x, 2, 10);
+    ctx.fillText("y: " + this.player.getPoint().y, 2, 30);
+    ctx.fillText("xVel: " + Math.round(this.player.velocity.x), 2, 60);
+    ctx.fillText("yVel: " + Math.round(this.player.velocity.y), 2, 90);
 
     ctx.fillText("health: " + Math.round(this.player.health), 2, 570);
    	ctx.fillText("shield: " + Math.round(this.player.shield), 2, 590);
@@ -461,8 +473,7 @@ class ClientUpdater extends ld42.Actor {
       console.log(playerUpdate);
       const player = this.remotePlayers.get(playerUpdate.id);
       if (player) {
-        player.x = playerUpdate.x;
-        player.y = playerUpdate.y;
+        player.setPoint(playerUpdate.x, playerUpdate.y);
       }
     }
   }
@@ -474,6 +485,7 @@ class Game {
     this.ctx.imageSmoothingEnabled = false;
     this.canvas = canvas;
     this.root = new ld42.Actor(0, 0);
+    this.camera = new ld42.Camera(canvas);
     this.player = new Player();
     const starfield = new ld42.Actor(0, 0);
     starfield.draw = ctx => {
@@ -512,62 +524,6 @@ class Game {
     this.controls = new Actor(0, 0);
     // Update objects
     this.controls.update = timeDelta => {
-    	// W
-    	if (87 in keysDown) {
-    		this.player.thrusters.down = true;
-    		this.player.y -= Math.round(this.player.speed * timeDelta);
-
-    		if (this.player.yVel > -this.environ.maxVel) {
-    			this.player.yVel -= this.environ.dVel;
-    		}
-    	}
-    	else
-    	{
-    		this.player.thrusters.down = false;
-    	}
-
-    	// S
-    	if (83 in keysDown) {
-    		this.player.thrusters.up = true;
-    		this.player.y += Math.round(this.player.speed * timeDelta);
-
-    		if (this.player.yVel < this.environ.maxVel) {
-    			this.player.yVel += this.environ.dVel;
-    		}
-    	}
-    	else
-    	{
-    		this.player.thrusters.up = false
-    	}
-
-    	// A
-    	if (65 in keysDown) {
-    		this.player.thrusters.right = true;
-    		this.player.x -= Math.round(this.player.speed * timeDelta);
-
-    		if (this.player.xVel > -this.environ.maxVel) {
-    			this.player.xVel -= this.environ.dVel;
-    		}
-    	}
-    	else
-    	{
-    		this.player.thrusters.right = false;
-    	}
-
-    	// D
-    	if (68 in keysDown) {
-    		this.player.thrusters.left = true;
-    		this.player.x += Math.round(this.player.speed * timeDelta);
-
-    		if (this.player.xVel < this.environ.maxVel) {
-    			this.player.xVel += this.environ.dVel;
-    		}
-    	}
-    	else
-    	{
-    		this.player.thrusters.left = false;
-    	}
-
       // E
       if (69 in keysDown) {
         if (this.player.bombs > 0)
@@ -616,14 +572,55 @@ class Game {
     });
   }
 
+  keyDown(keyDown) {
+    if (keyDown == 87) { // W
+      this.player.thrusters.down = true;
+      this.player.thrusters.false = true;
+      this.player.velocity.y = -VELOCITY;
+      this.player.acc.y = 0;
+    } else if (keyDown == 83) { // S
+      this.player.thrusters.up = true;
+      this.player.thrusters.down = false;
+      // this.player.y += Math.round(this.player.speed * timeDelta);
+      this.player.velocity.y = VELOCITY;
+      this.player.acc.y = 0;
+    } else if (keyDown == 65) { // A
+      this.player.thrusters.right = true;
+      this.player.thrusters.left = false;
+      // this.player.x -= Math.round(this.player.speed * timeDelta);
+      this.player.velocity.x = -VELOCITY;
+      this.player.acc.x = 0;
+    } else if (keyDown == 68) { // D
+      this.player.thrusters.left = true;
+      this.player.thrusters.right = false;
+      this.player.velocity.x = VELOCITY;
+      this.player.acc.x = 0;
+    }
+  }
+
+  keyUp(keyUp) {
+    if (keyUp == 87) { // W
+      this.player.thrusters.down = false;
+      this.player.acc.y = ACCELERATION;
+    } else if (keyUp == 83) { // S
+      this.player.thrusters.up = false;
+      this.player.acc.y = -ACCELERATION;
+    } else if (keyUp == 65) { // A
+      this.player.thrusters.right = false;
+      this.player.acc.x = ACCELERATION;
+    } else if (keyUp == 68) { // D
+      this.player.thrusters.left = false;
+      this.player.acc.x = -ACCELERATION;
+    }
+  }
+
   start() {
     this.then = Date.now();
     this.main();
   }
 
   reset() {
-    this.player.x = ((this.canvas.width) / 2);
-  	this.player.y = ((this.canvas.height) / 2);
+    this.player.setPoint(this.canvas.width / 2, this.canvas.height / 2);
   	this.player.xVel = 0;
   	this.player.yVel = 0;
   	this.player.health = 100;
@@ -638,21 +635,23 @@ class Game {
   }
 
   shootBullet() {
-    const x = this.player.x + 30;
-   	const y = this.player.y;
-  	var xVel = this.player.xVel;
-  	var yVel = this.player.yVel;
-    const b = new Bullet(x,y,xVel,yVel);
+  	var xVel = this.player.velocity.x;
+  	var yVel = this.player.velocity.y;
+    const b = new Bullet(
+        this.player.getPoint().x + 30,
+        this.player.getPoint().y,
+        xVel,yVel);
     this.root.addChild(b);
   	this.bullets.push(b);
   }
 
   shootBomb() {
-   	const x = this.player.x + 30;
-   	const y = this.player.y;
-   	var xVel = this.player.xVel;
-   	var yVel = this.player.yVel;
-    const b = new Bomb(x,y,xVel,yVel);
+    var xVel = this.player.velocity.x;
+  	var yVel = this.player.velocity.y;
+    const b = new Bomb(
+        this.player.getPoint().x + 30,
+        this.player.getPoint().y,
+        xVel,yVel);
     this.root.addChild(b);
    	this.bullets.push(b);
   }
@@ -660,9 +659,8 @@ class Game {
   // The main game loop
   main() {
   	const now = Date.now();
-  	const delta = now - this.then;
-    ld42.Actor.traverse(this.root, actor => actor.update(delta / 1000));
-    ld42.Actor.traverse(this.root, actor => actor.draw(this.ctx));
+  	const delta = Math.min(50, now - this.then);
+    this.camera.updateAndDraw(this.root, delta, this.ctx);
 
   	this.then = now;
 
@@ -676,11 +674,11 @@ const init = () => {
   window.keysDown = {};
 
   addEventListener("keydown", function (e) {
-  	keysDown[e.keyCode] = true;
+  	game.keyDown(e.keyCode);
   }, false);
 
   addEventListener("keyup", function (e) {
-  	delete keysDown[e.keyCode];
+    game.keyUp(e.keyCode);
   }, false);
 
   // Create the canvas

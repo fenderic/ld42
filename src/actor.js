@@ -1,9 +1,34 @@
-class Actor {
+class Point {
   constructor(x = 0, y = 0) {
     this.x = x;
     this.y = y;
+  }
+}
+
+Point.sum = (a, b) => {
+  return new Point(a.x + b.x, a.y + b.y);
+};
+
+Point.difference = (a, b) => {
+  return new Point(a.x - b.x, a.y - b.y);
+};
+
+ld42.Point = Point;
+
+class Actor {
+  constructor(x = 0, y = 0) {
+    this.point = new Point(x, y);
     this.children = [];
     this.parent = null;
+    this.projectedPoint = null;
+  }
+
+  setProjectedPoint(projectedPoint) {
+    this.projectedPoint = projectedPoint;
+  }
+
+  getProjectedPoint() {
+    return this.projectedPoint;
   }
 
   addChild(child) {
@@ -30,18 +55,14 @@ class Actor {
   }
 
   setPoint(x, y) {
-    this.x = x;
-    this.y = y;
+    this.point = new Point(x, y);
   }
 
   getPoint() {
-    let point = [this.x, this.y];
+    let point = this.point;
     if (this.parent) {
       const parentPoint = this.parent.getPoint();
-      point = [
-        point[0] + parentPoint[0],
-        point[1] + parentPoint[1],
-      ];
+      point = Point.sum(parentPoint, point);
     }
     return point;
   }
@@ -52,6 +73,18 @@ class Actor {
 
   draw(ctx) {
 
+  }
+
+  transformAndDraw(ctx) {
+    if (!this.getProjectedPoint()) {
+      return;
+    }
+    ctx.save();
+    ctx.translate(
+        Math.round(this.getProjectedPoint().x),
+        Math.round(this.getProjectedPoint().y));
+    this.draw(ctx);
+    ctx.restore();
   }
 }
 
