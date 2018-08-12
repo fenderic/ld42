@@ -16,6 +16,7 @@ class Storm extends ld42.Actor {
   	var start = 0;
   	var end = 2 * Math.PI;
   	ctx.arc(x,y,r,start,end);
+    ctx.closePath();
 
   	ctx.stroke();
   }
@@ -36,38 +37,166 @@ class Thrusters extends ld42.Actor {
   // Used to show movement
   // would like to replace with a nice particle effect later
   draw(ctx) {
-  	ctx.beginPath();
-  	ctx.strokeStyle = "#fc9723";
-  	ctx.lineWidth = "1";
+
     const point = this.getPoint();
     const x = point[0];
     const y = point[1];
 
+
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "#11447e";
+    ctx.fillStyle = "#185fb0";
+
+/* THRUSTER FRAME WITHOUT RESPECT TO PLAYER
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(20,0);
+    ctx.lineTo(40,0);
+    ctx.lineTo(40,10);
+    ctx.lineTo(35,10);
+    ctx.lineTo(35,25);
+    ctx.lineTo(50,25);
+    ctx.lineTo(50,20);
+    ctx.lineTo(60,20);
+    ctx.lineTo(60,40);
+    ctx.lineTo(50,40);
+    ctx.lineTo(50,35);
+    ctx.lineTo(35,35);
+    ctx.lineTo(35,50);
+    ctx.lineTo(40,50);
+    ctx.lineTo(40,60);
+    ctx.lineTo(20,60);
+    ctx.lineTo(20,50);
+    ctx.lineTo(25,50);
+    ctx.lineTo(25,35);
+    ctx.lineTo(10,35);
+    ctx.lineTo(10,40);
+    ctx.lineTo(0,40);
+    ctx.lineTo(0,20);
+    ctx.lineTo(10,20);
+    ctx.lineTo(10,25);
+    ctx.lineTo(25,25);
+    ctx.lineTo(25,10);
+    ctx.lineTo(20,10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+*/
+    // THRUSTER FRAME WITH RESPECT TO PLAYER
+    ctx.moveTo(this.parent.x + 20,this.parent.y + 0);
+    ctx.lineTo(this.parent.x + 40,this.parent.y + 0);
+    ctx.lineTo(this.parent.x + 40,this.parent.y + 10);
+    ctx.lineTo(this.parent.x + 35,this.parent.y + 10);
+    ctx.lineTo(this.parent.x + 35,this.parent.y + 25);
+    ctx.lineTo(this.parent.x + 50,this.parent.y + 25);
+    ctx.lineTo(this.parent.x + 50,this.parent.y + 20);
+    ctx.lineTo(this.parent.x + 60,this.parent.y + 20);
+    ctx.lineTo(this.parent.x + 60,this.parent.y + 40);
+    ctx.lineTo(this.parent.x + 50,this.parent.y + 40);
+    ctx.lineTo(this.parent.x + 50,this.parent.y + 35);
+    ctx.lineTo(this.parent.x + 35,this.parent.y + 35);
+    ctx.lineTo(this.parent.x + 35,this.parent.y + 50);
+    ctx.lineTo(this.parent.x + 40,this.parent.y + 50);
+    ctx.lineTo(this.parent.x + 40,this.parent.y + 60);
+    ctx.lineTo(this.parent.x + 20,this.parent.y + 60);
+    ctx.lineTo(this.parent.x + 20,this.parent.y + 50);
+    ctx.lineTo(this.parent.x + 25,this.parent.y + 50);
+    ctx.lineTo(this.parent.x + 25,this.parent.y + 35);
+    ctx.lineTo(this.parent.x + 10,this.parent.y + 35);
+    ctx.lineTo(this.parent.x + 10,this.parent.y + 40);
+    ctx.lineTo(this.parent.x + 0,this.parent.y + 40);
+    ctx.lineTo(this.parent.x + 0,this.parent.y + 20);
+    ctx.lineTo(this.parent.x + 10,this.parent.y + 20);
+    ctx.lineTo(this.parent.x + 10,this.parent.y + 25);
+    ctx.lineTo(this.parent.x + 25,this.parent.y + 25);
+    ctx.lineTo(this.parent.x + 25,this.parent.y + 10);
+    ctx.lineTo(this.parent.x + 20,this.parent.y + 10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    // If thruster active, draw fire
   	// moving up -- thrusters down
   	if (this.down) {
-  		ctx.rect(x, y + this.parent.height, this.width, this.height);
-  		ctx.rect(x + this.parent.width - this.width, y + this.parent.height, this.width, this.height);
-  	}
-
+/* THRUSTER FLAME WITHOUT RESPECT TO PLAYER
+      ctx.beginPath();
+      ctx.moveTo(20,60);
+      ctx.lineTo(20,75);
+      ctx.lineTo(25,70);
+      ctx.lineTo(30,80);
+      ctx.lineTo(35,70);
+      ctx.lineTo(40,75);
+      ctx.lineTo(40,60);
+      ctx.closePath();
+*/
+  	  // THRUSTER FLAME WITH RESPECT TO PLAYER
+      ctx.beginPath();
+      ctx.strokeStyle = "#fc9723";
+      ctx.fillStyle = "#fcab4e";
+      ctx.moveTo(this.parent.x + 20, this.parent.y + 60);
+      ctx.lineTo(this.parent.x + 20, this.parent.y + 75);
+      ctx.lineTo(this.parent.x + 25, this.parent.y + 70);
+      ctx.lineTo(this.parent.x + 30, this.parent.y + 80);
+      ctx.lineTo(this.parent.x + 35, this.parent.y + 70);
+      ctx.lineTo(this.parent.x + 40, this.parent.y + 75);
+      ctx.lineTo(this.parent.x + 40, this.parent.y + 60);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
   	// moving down -- thrusters up
   	if (this.up) {
-  		ctx.rect(x, y - this.height, this.width, this.height);
-  		ctx.rect(x + this.parent.width - this.width, y - this.height, this.width, this.height);
+      ctx.beginPath();
+      ctx.strokeStyle = "#fc9723";
+      ctx.fillStyle = "#fcab4e";
+      ctx.moveTo(this.parent.x + 20, this.parent.y);
+      ctx.lineTo(this.parent.x + 20, this.parent.y - 15);
+      ctx.lineTo(this.parent.x + 25, this.parent.y - 10);
+      ctx.lineTo(this.parent.x + 30, this.parent.y - 20);
+      ctx.lineTo(this.parent.x + 35, this.parent.y - 10);
+      ctx.lineTo(this.parent.x + 40, this.parent.y - 15);
+      ctx.lineTo(this.parent.x + 40, this.parent.y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
   	}
 
   	// moving left -- thrusters right
   	if (this.right) {
-  		ctx.rect(x + this.parent.width, y, this.width, this.height);
-  		ctx.rect(x + this.parent.width, y + this.parent.height - this.height, this.width, this.height);
+      ctx.beginPath();
+      ctx.strokeStyle = "#fc9723";
+      ctx.fillStyle = "#fcab4e";
+      ctx.moveTo(this.parent.x + 60, this.parent.y + 20);
+      ctx.lineTo(this.parent.x + 75, this.parent.y + 20);
+      ctx.lineTo(this.parent.x + 70, this.parent.y + 25);
+      ctx.lineTo(this.parent.x + 80, this.parent.y + 30);
+      ctx.lineTo(this.parent.x + 70, this.parent.y + 35);
+      ctx.lineTo(this.parent.x + 75, this.parent.y + 40);
+      ctx.lineTo(this.parent.x + 60, this.parent.y + 40);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
   	}
 
   	// moving right -- thrusters left
   	if (this.left) {
-  		ctx.rect(x - this.width, y, this.width, this.height);
-  		ctx.rect(x - this.width, y + this.parent.height - this.height, this.width, this.height);
+      ctx.beginPath();
+      ctx.strokeStyle = "#fc9723";
+      ctx.fillStyle = "#fcab4e";
+      ctx.moveTo(this.parent.x, this.parent.y + 20);
+      ctx.lineTo(this.parent.x - 15, this.parent.y + 20);
+      ctx.lineTo(this.parent.x - 10, this.parent.y + 25);
+      ctx.lineTo(this.parent.x - 20, this.parent.y + 30);
+      ctx.lineTo(this.parent.x - 10, this.parent.y + 35);
+      ctx.lineTo(this.parent.x - 15, this.parent.y + 40);
+      ctx.lineTo(this.parent.x, this.parent.y + 40);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
   	}
-
-  	ctx.stroke();
   }
 }
 
@@ -78,6 +207,7 @@ class Blasters extends ld42.Actor {
     this.height = 5;
   }
 
+/*
   draw(ctx) {
     ctx.beginPath();
     ctx.strokeStyle = "rgb(35, 136, 252, 1)";
@@ -88,6 +218,7 @@ class Blasters extends ld42.Actor {
     ctx.rect(x + this.width, y - this.height, this.width, this.height);
     ctx.stroke();
   }
+*/
 }
 
 class RemotePlayer extends ld42.Actor {
@@ -118,6 +249,8 @@ class Player extends ld42.Actor {
     this.shield = 100;
     this.shieldActivated = false;
     this.bombs = 3;
+    this.mouseX = 0;
+    this.mouseY = 0;
     this.thrusters = new Thrusters();
     this.addChild(this.thrusters);
     this.blasters = new Blasters();
@@ -134,11 +267,43 @@ class Player extends ld42.Actor {
   }
 
   draw(ctx) {
+    ctx.save();
     ctx.beginPath();
-    ctx.rect(this.x,this.y, this.width, this.height);
-    ctx.strokeStyle = "rgb(35, 136, 252, 1)";
-    ctx.lineWidth = "1";
+
+    ctx.translate(this.x+this.width/2, this.y+this.height/2);
+
+    var targetX = this.mouseX - this.x;
+    var targetY = this.mouseY - this.y;
+
+    var deg = Math.atan2(targetX,  targetY);
+    //console.log(deg);
+    var rad = deg * (180 / Math.PI);
+    //console.log("deg = " + deg + ", rad = " + rad);
+    ctx.rotate(-deg);
+    //ctx.rotate(rad);
+
+    ctx.strokeStyle = "#2388fc";
+    ctx.fillStyle = "#4e9ffc";
+      
+    ctx.moveTo(-5, -15)
+    ctx.lineTo(5, -15);
+    ctx.lineTo(15, -5);
+    ctx.lineTo(15, 5);
+    ctx.lineTo(5, 15);
+    ctx.lineTo(5, 35);
+    ctx.lineTo(-5, 35);
+    ctx.lineTo(-5, 15);
+    ctx.lineTo(-15, 5);
+    ctx.lineTo(-15, -5);
+
+    ctx.closePath();
+    
+    ctx.translate(-this.x-this.width/2, -this.y-this.height/2);
+
+    ctx.fill();
     ctx.stroke();
+    ctx.restore();
+
     this.drawShield(ctx);
   }
 
@@ -169,7 +334,7 @@ class Bullet extends ld42.Actor {
   	this.speed = 60;
   	this.xVel = xVel;
   	this.yVel = yVel;
-  	this.life = 1000;
+  	this.life = 100;
     // make the bullets disappear after a while? or just wait
     // till they go outside the game area?
   }
@@ -208,7 +373,7 @@ class Bomb extends ld42.Actor {
     this.y = y;
     this.xVel = xVel;
     this.yVel = yVel;
-    this.life = 10000; // bombs are bigger, last longer, move slower, and do more damage. maybe pulse too?
+    this.life = 200; // bombs are bigger, last longer, move slower, and do more damage. maybe pulse too?
   }
 
   update(timeDelta) {
@@ -249,13 +414,13 @@ class Hud extends ld42.Actor {
     ctx.font = "24px Consolas";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText("x: " + this.player.x, 2, 2);
-    ctx.fillText("y: " + this.player.y, 2, 32);
-    ctx.fillText("xVel: " + Math.round(this.player.xVel), 2, 62);
-    ctx.fillText("yVel: " + Math.round(this.player.yVel), 2, 92);
+    ctx.fillText("x: " + this.player.x, 2, 10);
+    ctx.fillText("y: " + this.player.y, 2, 30);
+    ctx.fillText("xVel: " + Math.round(this.player.xVel), 2, 60);
+    ctx.fillText("yVel: " + Math.round(this.player.yVel), 2, 90);
 
     ctx.fillText("health: " + Math.round(this.player.health), 2, 570);
-   	ctx.fillText("shield: " + Math.round(this.player.shield), 2, 592);
+   	ctx.fillText("shield: " + Math.round(this.player.shield), 2, 590);
    	ctx.fillText("bombs: " + Math.round(this.player.bombs), 2, 610);
     ctx.stroke();
   }
@@ -407,7 +572,7 @@ class Game {
       if (69 in keysDown) {
         if (this.player.bombs > 0)
         {
-          this.player.bombs -= Math.round(1);
+          this.player.bombs--;
           // prevent more than one from shooting
           this.shootBomb();
         }
@@ -463,6 +628,13 @@ class Game {
   	this.player.yVel = 0;
   	this.player.health = 100;
   	this.player.shield = 100;
+    this.player.bombs = 3;
+  }
+
+  getMousePosition(canvas, e) {
+    var canvasPosition = canvas.getBoundingClientRect();
+    this.player.mouseX = e.clientX - canvasPosition.top;
+    this.player.mouseY = e.clientY - canvasPosition.left;
   }
 
   shootBullet() {
@@ -476,10 +648,8 @@ class Game {
   }
 
   shootBomb() {
-   	var x;
-   	var y;
-   	x = this.player.x + 30;
-   	y = this.player.y;
+   	const x = this.player.x + 30;
+   	const y = this.player.y;
    	var xVel = this.player.xVel;
    	var yVel = this.player.yVel;
     const b = new Bomb(x,y,xVel,yVel);
@@ -518,6 +688,10 @@ const init = () => {
   canvas.width = 960;
   canvas.height = 640;
   document.body.appendChild(canvas);
+
+  canvas.addEventListener("mousemove", function (e) {
+    game.getMousePosition(canvas, e);
+  }, false);
 
   canvas.addEventListener("mousedown", function (e) {
     game.shootBullet();
