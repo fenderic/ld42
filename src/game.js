@@ -44,42 +44,6 @@ class Thrusters extends ld42.Actor {
     ctx.strokeStyle = "#11447e";
     ctx.fillStyle = "#185fb0";
 
-/* THRUSTER FRAME WITHOUT RESPECT TO PLAYER
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(20,0);
-    ctx.lineTo(40,0);
-    ctx.lineTo(40,10);
-    ctx.lineTo(35,10);
-    ctx.lineTo(35,25);
-    ctx.lineTo(50,25);
-    ctx.lineTo(50,20);
-    ctx.lineTo(60,20);
-    ctx.lineTo(60,40);
-    ctx.lineTo(50,40);
-    ctx.lineTo(50,35);
-    ctx.lineTo(35,35);
-    ctx.lineTo(35,50);
-    ctx.lineTo(40,50);
-    ctx.lineTo(40,60);
-    ctx.lineTo(20,60);
-    ctx.lineTo(20,50);
-    ctx.lineTo(25,50);
-    ctx.lineTo(25,35);
-    ctx.lineTo(10,35);
-    ctx.lineTo(10,40);
-    ctx.lineTo(0,40);
-    ctx.lineTo(0,20);
-    ctx.lineTo(10,20);
-    ctx.lineTo(10,25);
-    ctx.lineTo(25,25);
-    ctx.lineTo(25,10);
-    ctx.lineTo(20,10);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
-*/
     // THRUSTER FRAME WITH RESPECT TO PLAYER
     ctx.moveTo(20,0);
     ctx.lineTo(40,0);
@@ -116,17 +80,6 @@ class Thrusters extends ld42.Actor {
     // If thruster active, draw fire
   	// moving up -- thrusters down
   	if (this.down) {
-/* THRUSTER FLAME WITHOUT RESPECT TO PLAYER
-      ctx.beginPath();
-      ctx.moveTo(20,60);
-      ctx.lineTo(20,75);
-      ctx.lineTo(25,70);
-      ctx.lineTo(30,80);
-      ctx.lineTo(35,70);
-      ctx.lineTo(40,75);
-      ctx.lineTo(40,60);
-      ctx.closePath();
-*/
   	  // THRUSTER FLAME WITH RESPECT TO PLAYER
       ctx.beginPath();
       ctx.strokeStyle = "#fc9723";
@@ -272,6 +225,16 @@ class Player extends ld42.Actor {
     this.setPoint(
         this.getPoint().x + averageVelocity.x * timeDelta,
         this.getPoint().y + averageVelocity.y * timeDelta);
+
+    if (this.shield == 0) {
+      this.shieldActivated = false;
+    }
+    if (this.shieldActivated && this.shield > 0) {
+      this.shield--;
+    }
+    if (!this.shieldActivated && this.shield < 100) {
+      this.shield++;
+    }
   }
 
   getAverageVelocity(timeDelta) {
@@ -318,27 +281,27 @@ class Player extends ld42.Actor {
     ctx.stroke();
     ctx.restore();
 
-    this.drawShield(ctx);
-  }
+    if (this.shieldActivated)
+    {
+      ctx.save();
+      ctx.beginPath();
 
-  drawShield(ctx) {
-  	if (!this.shieldActivated) {
-      return;
+      ctx.strokeStyle = "rgb(35, 245, 252, 1)";
+      ctx.fillStyle = "rgb(35, 245, 252, 0.5)";
+      ctx.lineWidth = "3";
+
+      var x = this.width/2;
+      var y = this.height/2;
+      var r = 45;
+      var start = 0;
+      var end = 2 * Math.PI;
+      ctx.arc(x,y,r,start,end);
+
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
     }
-		ctx.beginPath();
-		ctx.strokeStyle = "rgb(35, 245, 252, 1)";
-		ctx.fillStyle = "rgb(35, 245, 252, 0.5)";
-		ctx.lineWidth = "3";
-
-		var x = this.width/2;
-		var y = this.height/2;
-		var r = 45;
-		var start = 0;
-		var end = 2 * Math.PI;
-		ctx.arc(x,y,r,start,end);
-		ctx.fill();
-
-		ctx.stroke();
   }
 }
 
@@ -360,14 +323,9 @@ class Bullet extends ld42.Actor {
   }
 
   // Draw bullets
-  // make them disappear after existing a lifetime? or get rid of once they
-  // leave the game area?
-  // want to prevent spam, but realisticly they bullets wouldnt disappear?
-  // maybe make them laser beams?
   draw(ctx) {
     ctx.beginPath();
     ctx.strokeStyle = "rgb(245, 252, 35, 1)";
-    //ctx.strokeStyle = "rgb(252, 42, 35, 1)"; // enemy bullet
     ctx.lineWidth = "1";
 
     var r = 1;
@@ -375,6 +333,7 @@ class Bullet extends ld42.Actor {
     var end = 2 * Math.PI;
     ctx.arc(0, 0, r, start, end);
 
+    ctx.closePath();
     ctx.stroke();
   }
 }
@@ -394,14 +353,11 @@ class Bomb extends ld42.Actor {
     }
   }
 
-  // Draw bullets
-  // make them disappear after existing a lifetime? or get rid of once they
-  // leave the game area?
-  // want to prevent spam, but realisticly they bullets wouldnt disappear?
-  // maybe make them laser beams?
+  // Draw bombs
   draw(ctx) {
     ctx.beginPath();
-    ctx.strokeStyle = "rgb(252, 42, 35, 1)";
+    ctx.strokeStyle = "rgb(206, 9, 3, 1)";
+    ctx.fillStyle = "rgb(252, 42, 35, 1)";
     ctx.lineWidth = "1";
 
     var r = 3;
@@ -409,7 +365,9 @@ class Bomb extends ld42.Actor {
     var end = 2 * Math.PI;
     ctx.arc(0, 0, r, start, end);
 
+    ctx.closePath();
     ctx.stroke();
+    ctx.fill();
   }
 }
 
@@ -426,8 +384,8 @@ class Hud extends ld42.Actor {
     ctx.font = "24px Consolas";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillText("x: " + this.player.getPoint().x, 2, 10);
-    ctx.fillText("y: " + this.player.getPoint().y, 2, 30);
+    ctx.fillText("x: " + Math.round(this.player.getPoint().x), 2, 10);
+    ctx.fillText("y: " + Math.round(this.player.getPoint().y), 2, 30);
     ctx.fillText("xVel: " + Math.round(this.player.velocity.x), 2, 60);
     ctx.fillText("yVel: " + Math.round(this.player.velocity.y), 2, 90);
 
@@ -450,7 +408,7 @@ class ClientUpdater extends ld42.Actor {
     this.client.sendState(this.player.getState());
     this.applyAdditions(this.client.getAdditions());
     this.applyRemovals(this.client.getRemovals());
-    this.applyUpdates(this.client.getUpdates())
+    this.applyUpdates(this.client.getUpdates());
   }
 
   applyRemovals(removedPlayers) {
@@ -524,39 +482,6 @@ class Game {
     this.controls = new Actor(0, 0);
     // Update objects
     this.controls.update = timeDelta => {
-      // E
-      if (69 in keysDown) {
-        if (this.player.bombs > 0)
-        {
-          this.player.bombs--;
-          // prevent more than one from shooting
-          this.shootBomb();
-        }
-      }
-
-    	// SPACE BAR
-    	if (32 in keysDown) {
-
-    		if (this.player.shield > 0)
-    		{
-    			this.player.shieldActivated = true;
-    			this.player.shield -= Math.round(1);
-    		}
-    		else
-    		{
-    			this.player.shieldActivated = false;
-    		}
-    	}
-    	else
-    	{
-    		this.player.shieldActivated = false;
-
-    		if (this.player.shield < 100)
-    		{
-    			this.player.shield += Math.round(1);
-    		}
-    	}
-
     	// R
     	if (82 in keysDown) {
     		this.reset();
@@ -595,6 +520,13 @@ class Game {
       this.player.thrusters.right = false;
       this.player.velocity.x = VELOCITY;
       this.player.acc.x = 0;
+    } else if (keyDown == 69) { // E
+      if (this.player.bombs > 0) {
+        this.player.bombs--;
+        this.shootBomb();
+      }
+    } else if (keyDown == 32) { // SPACE BAR
+      this.player.shieldActivated = true;
     }
   }
 
@@ -611,6 +543,8 @@ class Game {
     } else if (keyUp == 68) { // D
       this.player.thrusters.left = false;
       this.player.acc.x = -ACCELERATION;
+    } else if (keyUp == 32 || this.player.shield == 0) { // SPACE BAR
+      this.player.shieldActivated = false;
     }
   }
 

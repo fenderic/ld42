@@ -3,8 +3,9 @@ by [@fenderic](https://github.com/fenderic) & [@jhowcrof](https://github.com/jho
 
 ----
 ## controls
-* Arrow Keys to move
-* WASD to shoot
+* WASD to move
+* Point and click to aim and shoot
+* E for bomb
 * Space Bar to use shield
 * R to reset
 
